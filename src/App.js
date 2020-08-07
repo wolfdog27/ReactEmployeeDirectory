@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import axios from "axios"
 import './App.css';
 
 class App extends Component {
@@ -11,6 +11,22 @@ class App extends Component {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   };
+
+  makeRequest = async () => {
+    const URL = `https://randomuser.me/api/?results=${this.state.numInput}&nat=us`;
+
+    try {
+      let results = await axios.get(URL)
+      this.setState({ users: results.data.results });
+    } catch (e) {
+      console.log("ERROR:  ", e);
+    }
+
+  }
+
+  renderEmployees = () => {
+    return null;
+  }
 
   render() {
     const isNumberEntered = this.state.numInput === 0
@@ -28,12 +44,12 @@ class App extends Component {
             onChange={this.handleInputChange}
           />
         </label>
-        <button disabled={isNumberEntered}>
+        <button disabled={isNumberEntered} onClick={this.makeRequest}>
           {isNumberEntered ? "Please Enter A Number" : "Submit"}
         </button>
 
         <div className="empContainer">
-          {this.state.numInput}
+          {this.renderEmployees()}
         </div>
 
       </div>
