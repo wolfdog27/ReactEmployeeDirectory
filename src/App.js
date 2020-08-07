@@ -2,8 +2,29 @@ import React, { Component } from 'react';
 import axios from "axios"
 import './App.css';
 
+function EmployeeCard({ img, name, phone }) {
+  return (
+    <div>
+      <img src={img} alt={name.first} />
+      <div>
+        <p>{`${name.title} ${name.first} ${name.last}`}</p>
+        <p>{phone}</p>
+      </div>
+    </div>
+  );
+}
+
+const styles= {
+  empContainer: {
+    display:"flex",
+    flexWrap:"wrap",
+    justifyContent:"center"
+  }
+}
+
 class App extends Component {
   state = {
+    users: [],
     numInput: 0,
   };
 
@@ -25,7 +46,13 @@ class App extends Component {
   }
 
   renderEmployees = () => {
-    return null;
+    return this.state.users.map((user) => (
+      <EmployeeCard 
+        key={user.id.value} 
+        img={user.picture.large} 
+        name={user.name} 
+        phone={user.phone} />
+    ));
   }
 
   render() {
@@ -48,10 +75,7 @@ class App extends Component {
           {isNumberEntered ? "Please Enter A Number" : "Submit"}
         </button>
 
-        <div className="empContainer">
-          {this.renderEmployees()}
-        </div>
-
+        <div style={styles.empContainer}>{this.renderEmployees()}</div>
       </div>
     );
   }
