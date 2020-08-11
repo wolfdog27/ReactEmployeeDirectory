@@ -50,7 +50,7 @@ class App extends Component {
   }
 
   makeRequest = async () => {
-    const URL = `https://randomuser.me/api/?results=100&nat=us`;
+    const URL = `https://randomuser.me/api/?results=200&nat=us`;
 
     try {
       let results = await axios.get(URL)
