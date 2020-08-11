@@ -8,24 +8,56 @@ import './App.css';
 class App extends Component {
   state = {
     users: [],
+    initialUsers: [],
     search: '',
   };
 
+  toggle = false
 
   componentDidMount(){
     this.makeRequest()
   }
+
   handleInputChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    let filtereUsers = this.state.initialUsers.filter(item => item.name.last.toLowerCase().includes(value))
+    this.setState({users: filtereUsers, search: value})
+    
   };
+
+  handleSort = () => {
+      console.log("im here");
+
+  if (this.toggle) {
+    this.setState({users: this.state.users.sort(function(a, b){
+    
+      if(a.name.last < b.name.last) { return -1; }
+      if(a.name.last > b.name.last) { return 1; }
+      return 0;
+      
+  }) })
+  this.toggle = false
+  } else {
+    this.setState({users: this.state.users.sort(function(a, b){
+    
+      if(a.name.last < b.name.last) { return 1; }
+      if(a.name.last > b.name.last) { return -1; }
+      return 0;
+      
+  }) })
+  this.toggle = true
+  }
+  }
 
   makeRequest = async () => {
     const URL = `https://randomuser.me/api/?results=100&nat=us`;
 
     try {
       let results = await axios.get(URL)
-      this.setState({ users: results.data.results });
+      this.setState({ 
+          users: results.data.results,
+          initialUsers: results.data.results
+       });
     } catch (e) {
       console.log("ERROR:  ", e);
     }
@@ -34,7 +66,7 @@ class App extends Component {
 
 
   render() {
-    const isNumberEntered = this.state.numInput === 0
+
     return (
       <div className="App container">
         <h1>React Employee Directory</h1>
@@ -47,14 +79,12 @@ class App extends Component {
             onChange={this.handleInputChange}
           />
         </label>
-        <button disabled={isNumberEntered} onClick={this.makeRequest}>
-          {isNumberEntered ? "Please Enter A Number" : "Submit"}
-        </button>
+
 
         <table className="table">
           <thead>
             <th scope="col">Image</th>
-            <th scope="col">Name</th>
+            <button scope="col" onClick={this.handleSort}>Name</button>
             <th scope="col">Number</th>
             <th scope="col">Email</th>
           </thead>
